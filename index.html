@@ -368,4 +368,44 @@ function showDetail(j){
     p.textContent="Pick a point on the timeline to see the flights.";
     d.appendChild(p);return;
   }
-  d.style.setProperty("--dc",`var(
+  d.style.setProperty("--dc",`var(${PARTIES[j.who[0]].v})`);
+  const h=document.createElement("h3");
+  h.textContent=j.who.map(w=>PARTIES[w].name).join("  +  ");
+  if(j.who.length>1){const t=document.createElement("span");t.className="tag";t.textContent="same flight";h.appendChild(t);}
+  d.appendChild(h);
+  const[y,m,dd]=j.date.split("-").map(Number);
+  const dt=new Date(Date.UTC(y,m-1,dd));
+  const w=document.createElement("p");w.className="when";
+  w.textContent=`${DOWL[dt.getUTCDay()]} ${dd} ${MON[m-1]} — ${j.phase}`;
+  d.appendChild(w);
+  j.legs.forEach(l=>{
+    const row=document.createElement("div");row.className="leg";
+    const fn=document.createElement("div");fn.className="fno";
+    fn.appendChild(document.createTextNode(l.f));
+    if(l.op){const s=document.createElement("span");s.textContent=l.op;fn.appendChild(s);}
+    const rt=document.createElement("div");rt.className="route";
+    const mk=(c,t)=>{const s=document.createElement("span");
+      const a=document.createElement("span");a.className="apt";a.textContent=c;
+      const b=document.createElement("span");b.className="t";b.textContent=" "+t;
+      s.appendChild(a);s.appendChild(b);return s;};
+    rt.appendChild(mk(l.a,l.at));
+    const ar=document.createElement("span");ar.className="arrow";ar.textContent="→";rt.appendChild(ar);
+    rt.appendChild(mk(l.b,l.bt));
+    if(l.bday){const s=document.createElement("span");s.className="note";s.textContent=l.bday;rt.appendChild(s);}
+    if(l.note){const s=document.createElement("span");s.className="note";s.textContent=l.note;rt.appendChild(s);}
+    row.appendChild(fn);row.appendChild(rt);d.appendChild(row);
+  });
+}
+
+function fit(){
+  const avail=document.getElementById("scroller").clientWidth;
+  const days=d2n(RANGE.to)-d2n(RANGE.from)+1;
+  const ideal=(avail-labelW())/days;
+  document.documentElement.style.setProperty("--day-w",Math.max(36,Math.min(66,ideal))+"px");
+}
+
+buildChips();fit();draw();
+window.addEventListener("resize",()=>{fit();draw();});
+</script>
+</body>
+</html>
