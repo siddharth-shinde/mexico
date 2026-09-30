@@ -133,7 +133,7 @@ footer p{margin:0 0 4px}
 <body>
 <div class="wrap">
   <h1>Mexico, October 2026</h1>
-  <p class="dek">Dotted verticals mark a flight two groups share.</p>
+  <p class="dek">Dotted verticals link groups on the same flight.</p>
 
   <div class="controls">
     <div id="chips" style="display:flex;gap:7px;flex-wrap:wrap"></div>
@@ -187,7 +187,7 @@ const J=[
    {f:"AM 516",a:"MEX",at:"10:05",b:"CUN",bt:"13:33"}]},
  {id:"s5",date:"2026-10-08",who:["sunita"],phase:"On to Cancún",legs:[
    {f:"AM 528",a:"MEX",at:"13:00",b:"CUN",bt:"16:31",note:"Departs Terminal 2, arrives Terminal 4"}]},
- {id:"kd",date:"2026-10-08",who:["mohan","raju"],phase:"On to Cancún",legs:[
+ {id:"kd",date:"2026-10-08",who:["mohan","raju","sand"],phase:"On to Cancún",legs:[
    {f:"AM 536",a:"MEX",at:"15:15",b:"CUN",bt:"18:48",note:"Raju + 2 carry on by road to the Riviera Maya"}]},
  {id:"m3",date:"2026-10-15",who:["rajiv"],phase:"Heading home",legs:[
    {f:"UA 1694",a:"CUN",at:"11:14",b:"IAD",bt:"15:32"}]},
@@ -200,8 +200,6 @@ const J=[
    {f:"AI 2106 / AI 4217",a:"SIN",at:"08:45",b:"DXB",bt:"17:25",via:"DEL"}]},
  {id:"x1",date:"2026-10-03",who:["sand"],phase:"Into Mexico City",legs:[
    {f:"AM 695",a:"YVR",at:"08:15",b:"MEX",bt:"15:10"}]},
- {id:"x2",date:"2026-10-09",who:["sand"],phase:"On to Cancún",legs:[
-   {f:"AM 520",a:"MEX",at:"11:05",b:"CUN",bt:"14:41"}]},
  {id:"x3",date:"2026-10-15",who:["sand"],phase:"Heading home",legs:[
    {f:"AM 555",a:"CUN",at:"19:41",b:"MEX",bt:"21:15"},
    {f:"AM 694",d:"2026-10-16",a:"MEX",at:"01:10",b:"YVR",bt:"06:05",bday:"Departs and lands 16 Oct",note:"Overnight connection in Mexico City, 3h 55m"}]},
@@ -380,7 +378,7 @@ function showDetail(j){
   }
   d.style.setProperty("--dc",`var(${PARTIES[j.who[0]].v})`);
   const h=document.createElement("h3");
-  h.textContent=j.who.map(w=>PARTIES[w].name).join("  +  ");
+  h.textContent=j.who.map(w=>PARTIES[w].name).join(", ");
   if(j.who.length>1){const t=document.createElement("span");t.className="tag";t.textContent="same flight";h.appendChild(t);}
   d.appendChild(h);
   const[y,m,dd]=j.date.split("-").map(Number);
