@@ -12,7 +12,7 @@
   --paper:#EDF0F2; --card:#FFFFFF;
   --ink:#14212B; --ink-soft:#55656F; --ink-faint:#8494A0;
   --rule:#C9D2D8; --rule-soft:#DEE5E9; --grid:#E2E8EC;
-  --p-mohan:#B5342B; --p-sunita:#1D6A73; --p-rajiv:#6B4E9E; --p-raju:#B4740E;
+  --p-mohan:#B5342B; --p-sunita:#1D6A73; --p-rajiv:#6B4E9E; --p-raju:#B4740E; --p-sand:#5E7F1E;
   --lane-h:104px; --label-w:106px; --day-w:46px;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -22,13 +22,13 @@
   --paper:#101A21; --card:#17242C;
   --ink:#E6EDF1; --ink-soft:#93A4AF; --ink-faint:#6C7E8A;
   --rule:#27363F; --rule-soft:#1E2C34; --grid:#1C2A32;
-  --p-mohan:#E27367; --p-sunita:#49A9B3; --p-rajiv:#A488D6; --p-raju:#D9A03F;
+  --p-mohan:#E27367; --p-sunita:#49A9B3; --p-rajiv:#A488D6; --p-raju:#D9A03F; --p-sand:#A5C866;
 }}
 :root[data-theme="dark"]{
   --paper:#101A21; --card:#17242C;
   --ink:#E6EDF1; --ink-soft:#93A4AF; --ink-faint:#6C7E8A;
   --rule:#27363F; --rule-soft:#1E2C34; --grid:#1C2A32;
-  --p-mohan:#E27367; --p-sunita:#49A9B3; --p-rajiv:#A488D6; --p-raju:#D9A03F;
+  --p-mohan:#E27367; --p-sunita:#49A9B3; --p-rajiv:#A488D6; --p-raju:#D9A03F; --p-sand:#A5C866;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{-webkit-text-size-adjust:100%}
@@ -51,6 +51,7 @@ h1{font-size:clamp(28px,7vw,46px);line-height:1.03;letter-spacing:-.025em;font-w
 .chip[data-party="sunita"][aria-pressed="true"]{background:var(--p-sunita);border-color:var(--p-sunita);color:#fff}
 .chip[data-party="rajiv"][aria-pressed="true"]{background:var(--p-rajiv);border-color:var(--p-rajiv);color:#fff}
 .chip[data-party="raju"][aria-pressed="true"]{background:var(--p-raju);border-color:var(--p-raju);color:#fff}
+.chip[data-party="sand"][aria-pressed="true"]{background:var(--p-sand);border-color:var(--p-sand);color:#fff}
 .spacer{flex:1 1 auto;min-width:6px}
 .hint{font-size:12.5px;color:var(--ink-faint);margin:9px 0 0}
 
@@ -152,7 +153,7 @@ footer p{margin:0 0 4px}
 
   <footer>
     <p>Each point sits at its departure time within the day, so earlier flights fall to the left. Times are local to the airport shown. Flights only — hotels and ground travel aren't in here yet.</p>
-    <p>Last updated 26 September 2026.</p>
+    <p>Last updated 30 September 2026.</p>
   </footer>
 </div>
 
@@ -161,9 +162,10 @@ const PARTIES={
   mohan:{name:"Mohan + Kanta",sub:"from Atlanta",v:"--p-mohan"},
   sunita:{name:"Sunita + 2",sub:"from Mumbai",v:"--p-sunita"},
   rajiv:{name:"Rajiv + 3",sub:"from Washington",v:"--p-rajiv"},
-  raju:{name:"Raju + 2",sub:"from Dubai",v:"--p-raju"}
+  raju:{name:"Raju + 2",sub:"from Dubai",v:"--p-raju"},
+  sand:{name:"Sandstorm",sub:"from Vancouver",v:"--p-sand"}
 };
-const ORDER=["mohan","raju","sunita","rajiv"];
+const ORDER=["mohan","raju","sunita","rajiv","sand"];
 const J=[
  {id:"s1",date:"2026-09-24",who:["sunita"],phase:"Heading over",legs:[
    {f:"DL 9495",op:"Operated by KLM",a:"BOM",at:"02:00",b:"AMS",bt:"07:50"},
@@ -196,6 +198,13 @@ const J=[
    {f:"SQ 35",a:"LAX",at:"21:15",b:"SIN",bt:"05:15",bday:"Lands 18 Oct"}]},
  {id:"d4",date:"2026-10-18",who:["raju"],phase:"Heading home",legs:[
    {f:"AI 2106 / AI 4217",a:"SIN",at:"08:45",b:"DXB",bt:"17:25",via:"DEL"}]},
+ {id:"x1",date:"2026-10-03",who:["sand"],phase:"Into Mexico City",legs:[
+   {f:"AM 695",a:"YVR",at:"08:15",b:"MEX",bt:"15:10"}]},
+ {id:"x2",date:"2026-10-09",who:["sand"],phase:"On to Cancún",legs:[
+   {f:"AM 520",a:"MEX",at:"11:05",b:"CUN",bt:"14:41"}]},
+ {id:"x3",date:"2026-10-15",who:["sand"],phase:"Heading home",legs:[
+   {f:"AM 555",a:"CUN",at:"19:41",b:"MEX",bt:"21:15"},
+   {f:"AM 694",d:"2026-10-16",a:"MEX",at:"01:10",b:"YVR",bt:"06:05",bday:"Departs and lands 16 Oct",note:"Overnight connection in Mexico City, 3h 55m"}]},
  {id:"s3",date:"2026-10-25",who:["sunita"],phase:"Heading home",legs:[
    {f:"DL 8703",op:"Operated by Air France",a:"ATL",at:"21:15",b:"CDG",bt:"10:35",bday:"Lands 26 Oct"}]},
  {id:"s4",date:"2026-10-26",who:["sunita"],phase:"Heading home",legs:[
@@ -291,7 +300,8 @@ function draw(){
     const mine=J.filter(j=>j.who.includes(id)&&d2n(j.date)>=d2n(RANGE.from)&&d2n(j.date)<=d2n(RANGE.to))
                 .sort((a,b)=>d2n(a.date)-d2n(b.date));
     if(mine.length>1){
-      const x1=xJ(mine[0]),x2=xJ(mine[mine.length-1]);
+      const lastJ=mine[mine.length-1],lastL=lastJ.legs[lastJ.legs.length-1];
+      const x1=xJ(mine[0]),x2=Math.max(xJ(lastJ),xOf(lastL.d||lastJ.date,lastL.at));
       const rail=document.createElement("div");rail.className="rail";
       rail.style.left=x1+"px";rail.style.width=(x2-x1)+"px";lane.appendChild(rail);
       for(let i=0;i<mine.length-1;i++){
@@ -334,7 +344,7 @@ function draw(){
       lane.appendChild(b);
       j.legs.slice(1).forEach(seg=>{
         const t=document.createElement("span");t.className="cx";
-        t.style.left=xOf(j.date,seg.at)+"px";
+        t.style.left=xOf(seg.d||j.date,seg.at)+"px";
         t.title=seg.a+" connection";
         lane.appendChild(t);
       });
