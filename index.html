@@ -153,7 +153,7 @@ footer p{margin:0 0 4px}
 
   <footer>
     <p>Each point sits at its departure time within the day, so earlier flights fall to the left. Times are local to the airport shown. Flights only — hotels and ground travel aren't in here yet.</p>
-    <p>Last updated 30 September 2026.</p>
+    <p>Last updated 3 October 2026.</p>
   </footer>
 </div>
 
@@ -173,8 +173,9 @@ const J=[
  {id:"d1",date:"2026-10-01",who:["raju"],phase:"Heading over",legs:[
    {f:"AI 4310 / AI 2115",a:"DXB",at:"19:30",b:"SIN",bt:"12:10",bday:"Lands 2 Oct",via:"DEL",note:"Changes at Delhi, then overnight in Singapore"}]},
  {id:"s2",date:"2026-10-03",who:["sunita"],phase:"Into Mexico City",legs:[
-   {f:"DL 3996",a:"IAD",at:"06:10",b:"MSP",bt:"08:07"},
-   {f:"DL 611",a:"MSP",at:"09:21",b:"MEX",bt:"12:40"}]},
+   {f:"DL 3996",a:"IAD",at:"06:10",b:"MSP",bt:"08:07",note:"Delayed, so they missed the original connection to Mexico City"},
+   {f:"TBC",a:"MSP",b:"DFW",note:"Rebooked flight to Dallas. Flight number and times to be confirmed"},
+   {f:"DL 8095",op:"Operated by Aeromexico Connect as AM 1689",a:"DFW",at:"14:32",b:"MEX",bt:"16:20",note:"Departs Terminal D, lands Terminal 2"}]},
  {id:"m1",date:"2026-10-03",who:["rajiv"],phase:"Into Mexico City",legs:[
    {f:"UA 1524",a:"IAD",at:"08:30",b:"IAH",bt:"10:51"},
    {f:"UA 1088",a:"IAH",at:"12:01",b:"MEX",bt:"13:15"}]},
@@ -341,6 +342,7 @@ function draw(){
       b.addEventListener("click",()=>{selected=j.id;draw();showDetail(j);});
       lane.appendChild(b);
       j.legs.slice(1).forEach(seg=>{
+        if(!seg.at)return;
         const t=document.createElement("span");t.className="cx";
         t.style.left=xOf(seg.d||j.date,seg.at)+"px";
         t.title=seg.a+" connection";
@@ -394,7 +396,7 @@ function showDetail(j){
     const rt=document.createElement("div");rt.className="route";
     const mk=(c,t)=>{const s=document.createElement("span");
       const a=document.createElement("span");a.className="apt";a.textContent=c;
-      const b=document.createElement("span");b.className="t";b.textContent=" "+t;
+      const b=document.createElement("span");b.className="t";b.textContent=t?" "+t:" time TBC";
       s.appendChild(a);s.appendChild(b);return s;};
     rt.appendChild(mk(l.a,l.at));
     const ar=document.createElement("span");ar.className="arrow";ar.textContent="→";rt.appendChild(ar);
